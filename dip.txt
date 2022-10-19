@@ -242,4 +242,55 @@ plt.subplot(121),plt.imshow(binary, cmap="gray")plt.subplot(122),plt.imshow(ima
 plt.show()
 
 
+------------------------------------------------------------------------------------------------------------
+
+6) Get text from image using python
+
+from PIL import Image, ImageEnhance, ImageFilter
+import os
+import pytesseract
+
+path = 'ss.png'
+img = Image.open(path)
+img = img.convert('RGBA')
+pix = img.load()
+
+#print pix([x,y])
+for y in range (img.size[1]):
+    for x in range (img.size[0]):
+        if pix[x,y][0]<102 or pix[x,y][1]<120 or pix[x,y][2]<102:
+            pix[x,y] = (0,0,0,255)
+        else:
+            pix[x,y] = (255,255,255,255)
+            
+img.save('temp.png')
+img.show()
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\21pds865\AppData\Local\Tesseract-OCRtesseract.exe'
+text = pytesseract.image_to_string(Image.open('temp.png'))
+print(text)
+
+
+------------------------------------------------------------------------------------------------------------
+
+7) Video Capture
+
+#import libraries into the environment
+import numpy as np
+import cv2
+
+cap = cv2.VideoCapture('Animation_video.mp4')
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
+
+while(True):
+    ret,frame = cap.read()
+    gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+    out.write(frame)
+    cv2.imshow('frame',gray)
+    if cv2.waitKey(1) & 0xFF==ord('q'):
+        break
+        
+cap.release()
+out.release()
+cv2.destroyAllWindows()
 
